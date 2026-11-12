@@ -1,0 +1,13 @@
+{
+  "name": "calorie-ledger",
+  "version": "2.0.0",
+  "private": true,
+  "description": "A private, browser-based calorie ledger",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

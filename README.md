@@ -35,13 +35,13 @@ A local HTTP server is recommended because the app uses JavaScript modules. No b
 
 ## Tests
 
-Requires Node.js 20 or newer. Run:
+Requires Node.js 22 or newer. Run:
 
 ```bash
 npm test
 ```
 
-The test suite uses only Node's built-in test runner and assertion modules. GitHub Actions runs it on Node.js 20 and 22.
+The test suite uses only Node's built-in test runner and assertion modules. GitHub Actions runs it on Node.js 22 and 24.
 
 ## Privacy and security
 

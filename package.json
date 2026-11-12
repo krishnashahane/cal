@@ -5,7 +5,7 @@
   "description": "A private, browser-based calorie ledger",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "test": "node --test"

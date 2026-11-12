@@ -1,14 +1,13 @@
-"use strict";
-const test = require("node:test");
-const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const vm = require("node:vm");
+import test from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import vm from "node:vm";
 
 const html = fs.readFileSync(new URL("../index.html", import.meta.url), "utf8");
-const scripts = [...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/gi)];
+const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/gi)];
 const script = scripts.map((match) => match[1]).join("\n");
 
-test("page contains its essential accessible controls", () => {
+test("page contains essential accessible controls", () => {
   for (const id of ["balance", "food", "exercise", "rest", "target", "add-food", "add-exercise", "undo", "reset", "save", "logs", "progress"]) {
     assert.match(html, new RegExp('id="' + id + '"'));
   }
@@ -23,15 +22,15 @@ test("inline application JavaScript parses", () => {
 
 test("application keeps data local and avoids unsafe HTML injection", () => {
   assert.match(script, /localStorage/);
-  assert.match(script, /calorie-ledger\\.v2/);
+  assert.match(script, /calorie-ledger\.v2/);
   assert.match(script, /textContent/);
-  assert.doesNotMatch(script, /\\.innerHTML\\s*=|\\beval\\s*\\(|new Function\\s*\\(/);
+  assert.doesNotMatch(script, /\.innerHTML\s*=|\beval\s*\(|new Function\s*\(/);
 });
 
 test("daily rollover, settings validation and bounded history are implemented", () => {
-  assert.match(script, /state\\.date!==day\\(\\)/);
-  assert.match(script, /r<500\\|\\|r>6000/);
-  assert.match(script, /t<0\\|\\|t>2000/);
-  assert.match(script, /state\\.entries\\.length>=1000/);
-  assert.match(script, /state\\.entries\\.pop\\(\\)/);
+  assert.match(script, /state\.date!==day\(\)/);
+  assert.match(script, /r<500\|\|r>6000/);
+  assert.match(script, /t<0\|\|t>2000/);
+  assert.match(script, /state\.entries\.length>=1000/);
+  assert.match(script, /state\.entries\.pop\(\)/);
 });

@@ -20,7 +20,7 @@ The resting-energy rate is a simplified user-configured estimate, not measured e
 ## Run locally
 Open `index.html` in a modern browser. Alternatively, run `python3 -m http.server 8000` from this directory and visit [http://localhost:8000](http://localhost:8000).
 
-No package manager, account, server, or external service is required.
+No package manager, account, server, or external service is required.\n\n## Tests\nRun the dependency-free smoke suite with Node.js 22 or newer:\n\n`node --test tests/smoke.test.mjs`\n\nGitHub Actions runs this suite on pushes and pull requests.
 
 ## Privacy
 Data is stored in this browser's local storage and is not sent to a server. Clearing browser site data removes saved entries. Data does not automatically sync between browsers or devices.

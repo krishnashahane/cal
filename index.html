@@ -1,122 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calorie Status</title>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-}
-
-.container {
-    text-align: center;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-    margin-bottom: 20px;
-}
-
-.counter {
-    font-size: 48px;
-    margin-bottom: 20px;
-}
-
-#deficit-count {
-    font-size: 24px;
-}
-
-button {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#reset-button {
-    background-color: #ff6347;
-    color: white;
-}
-
-#exercise-button {
-    background-color: #4caf50;
-    color: white;
-}
-
-#eat-button {
-    background-color: #2196f3;
-    color: white;
-}
-</style>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111713">
+  <meta name="description" content="A private browser-based calorie ledger with transparent estimates and local data storage.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; connect-src 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; form-action 'self'">
+  <meta name="referrer" content="no-referrer">
+  <title>Calorie Ledger — Daily Energy Estimate</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./src/app.mjs"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Calorie Status</h1>
-        <div class="counter">
-            <p id="calorie-count">0</p>
-            <p id="deficit-count">0</p>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Calorie Ledger home">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <span><span class="eyebrow">Personal analytics</span><strong>Calorie Ledger</strong></span>
+      </a>
+      <div class="header-meta">
+        <span id="current-date" class="date-label"></span>
+        <span id="storage-status" class="storage-label">Loading local storage…</span>
+      </div>
+    </header>
+
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Daily overview</p>
+      <h1 id="page-title">A clearer view of your energy balance.</h1>
+      <p>Record food and activity. Compare the estimate with your own daily reference.</p>
+    </section>
+
+    <div class="dashboard">
+      <section class="panel overview" aria-labelledby="overview-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">Estimated net energy balance</p><h2 id="overview-title" class="sr-only">Today's energy balance</h2></div>
+          <span id="goal-status" class="status-chip" data-state="attention">Calculating</span>
         </div>
-        <button id="reset-button">Reset</button>
-        <button id="exercise-button">-100 kcal</button>
-        <button id="eat-button">+100 kcal</button>
+
+        <p id="net-value" class="net-value" aria-live="polite">0 kcal</p>
+        <p class="muted">Food intake − logged activity − estimated resting energy elapsed</p>
+        <p class="muted small">A negative value indicates an estimated deficit; a positive value indicates an estimated surplus.</p>
+
+        <div class="progress-heading"><span>Progress against deficit reference</span><strong id="progress-value">0%</strong></div>
+        <div id="progress-bar" class="progress-track" role="progressbar" aria-label="Estimated progress against daily deficit reference" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <p id="progress-caption" class="progress-caption">Below reference</p>
+
+        <div class="metric-grid" aria-label="Energy totals">
+          <article class="metric"><span>Food logged</span><strong id="food-total">0 kcal</strong></article>
+          <article class="metric"><span>Activity logged</span><strong id="activity-total">0 kcal</strong></article>
+          <article class="metric"><span>Estimated resting energy</span><strong id="resting-total">0 kcal</strong></article>
+          <article class="metric"><span>Daily deficit reference</span><strong id="deficit-total">500 kcal</strong></article>
+        </div>
+
+        <div class="log-section">
+          <div class="section-heading"><h2>Record an entry</h2><span class="muted small">Whole kcal · 1–20,000</span></div>
+          <form id="entry-form" class="entry-form">
+            <label class="field"><span>Entry type</span>
+              <select id="entry-type" name="type"><option value="food">Food intake</option><option value="activity">Activity</option></select>
+            </label>
+            <label class="field"><span>Calories (kcal)</span>
+              <input id="entry-amount" name="amount" type="number" min="1" max="20000" step="1" value="100" required inputmode="numeric">
+            </label>
+            <button class="button button-primary" type="submit">Add entry</button>
+          </form>
+          <div class="quick-actions" aria-label="Quick add">
+            <button class="button button-secondary" type="button" data-quick-type="food">＋ 100 kcal food</button>
+            <button class="button button-secondary" type="button" data-quick-type="activity">＋ 100 kcal activity</button>
+          </div>
+          <div class="action-row">
+            <button id="undo-entry" class="button button-quiet" type="button" disabled>Undo last</button>
+            <button id="reset-day" class="button button-quiet button-danger" type="button">Clear today's entries</button>
+            <button id="export-csv" class="button button-quiet" type="button">Export CSV</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="sidebar">
+        <section class="panel" aria-labelledby="settings-title">
+          <div class="section-heading"><div><p class="eyebrow">Configuration</p><h2 id="settings-title">Daily settings</h2></div></div>
+          <form id="settings-form">
+            <label class="field"><span>Estimated resting energy (kcal/day)</span>
+              <input id="resting-energy" name="restingEnergy" type="number" min="500" max="6000" step="1" required>
+            </label>
+            <label class="field"><span>Daily deficit reference (kcal/day)</span>
+              <input id="deficit-goal" name="deficitGoal" type="number" min="0" max="2000" step="1" required>
+            </label>
+            <button class="button button-primary full-width" type="submit">Save settings</button>
+          </form>
+          <p class="help-text">Defaults are illustrative. Set estimates from a suitable source; this tool does not calculate your personal requirements.</p>
+        </section>
+
+        <section class="panel" aria-labelledby="history-title">
+          <div class="section-heading">
+            <div><p class="eyebrow">Recent activity</p><h2 id="history-title">Today's entries</h2></div>
+            <span id="entry-count" class="muted small">0 of 500 entries</span>
+          </div>
+          <ul id="entry-history" class="entry-history" aria-live="polite"><li class="empty-state">No entries yet.</li></ul>
+        </section>
+        <p id="app-message" class="app-message" role="status" aria-live="polite">Your entries stay in this browser.</p>
+      </aside>
     </div>
 
-<script type="text/javascript">
-
-// user configuration ------
-// these will count our calories burned at rest
-let calorieCount = 0;
-const hourlyCalorieBurn = 2000 / 24.0; // burned per hour
-// goal is to lose 500 kcal/day (i.e. ~1 lb/week)
-let desiredDeficitCount = 0;
-const hourlyCalorieTargetDeficit = 500 / 24.0;
-// --------------------------
-
-let lastUpdateTime = Date.now();
-
-function updateCalorieCount() {
-    const currentTime = Date.now();
-    const elapsedHours = (currentTime - lastUpdateTime) / (1000 * 60 * 60);
-    calorieCount -= elapsedHours * hourlyCalorieBurn;
-    desiredDeficitCount -= elapsedHours * hourlyCalorieTargetDeficit;
-    lastUpdateTime = currentTime;
-    document.getElementById('calorie-count').innerText = calorieCount.toFixed(2);
-    document.getElementById('deficit-count').innerText = "GOAL: " + desiredDeficitCount.toFixed(2);
-    let color = calorieCount < desiredDeficitCount ? 'green' : 'red'; // green if met, red otherwise
-    document.getElementById('deficit-count').style.color = color;
-}
-
-document.getElementById('reset-button').addEventListener('click', () => {
-    calorieCount = 0;
-    desiredDeficitCount = 0; // reset the goal counter as well
-    lastUpdateTime = Date.now();
-});
-
-document.getElementById('exercise-button').addEventListener('click', () => {
-    updateCalorieCount();
-    calorieCount -= 100;
-});
-
-document.getElementById('eat-button').addEventListener('click', () => {
-    updateCalorieCount();
-    calorieCount += 100;
-});
-
-setInterval(updateCalorieCount, 500); // update counter every 500ms
-</script>
-
+    <section class="disclaimer" aria-label="Calculation limitations">
+      <strong>Estimate, not measurement.</strong>
+      Resting energy is applied proportionally across your local calendar day. Food and activity values are manually entered. The result is not measured total daily energy expenditure, a prediction of weight change, or medical or nutrition advice. Exercise is accounted for separately from the resting-energy estimate.
+    </section>
+    <footer>Private by default · Stored locally in this browser · No account or external service</footer>
+  </main>
 </body>
 </html>

@@ -10,7 +10,7 @@ python3 -m http.server 8000
 
 ## Tests
 
-Use Node.js 20 or newer:
+Use Node.js 22 or newer:
 
 ```bash
 npm test

@@ -58,8 +58,7 @@ function render(now = new Date()) {
   byId("resting-total").textContent = `${formatCalories(summary.estimatedRestingEnergy)} kcal`;
   byId("deficit-total").textContent = `${formatCalories(summary.goal)} kcal`;
   byId("deficit-value").textContent = `${summary.estimatedDeficit > 0 ? "+" : ""}${formatCalories(summary.estimatedDeficit)} kcal`;
-  byId("progress-fill").style.width = `${summary.progress}%`;
-  byId("progress-bar").setAttribute("aria-valuenow", String(Math.round(summary.progress)));
+  byId("progress-bar").value = summary.progress;
   byId("progress-value").textContent = `${Math.round(summary.progress)}%`;
   byId("progress-caption").textContent = summary.onTrack
     ? "At or above your reference"
